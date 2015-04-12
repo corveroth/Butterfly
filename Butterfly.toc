@@ -1,0 +1,11 @@
+## Interface: 60100
+## Title: Butterfly
+## Author: Corv
+## Notes: Adds features to the Social (Twitter) interface.
+
+FauxFrame.lua
+EditBox.lua
+GalleryFrame.lua
+Butterfly.lua
+# SPFButtons.lua
+
