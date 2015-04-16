@@ -1,2 +1,2 @@
 ignore:
-   SPFButtons.lua
+   - SPFButtons.lua
