@@ -1,2 +1,13 @@
+externals:
+   Libs/LibSharedMedia-3.0:
+      url: svn://svn.wowace.com/wow/libsharedmedia-3-0/mainline/trunk
+   Libs/SharedMediaAdditionalFonts:
+      url: svn://svn.wowace.com/wow/shared-media-additional-fonts/mainline/trunk
+   Libs/AceGUI-3.0-SharedMediaWidgets: # embeds AceGUI-3.0
+      url: svn://svn.wowace.com/wow/ace-gui-3-0-shared-media-widgets/mainline/trunk
+   Libs/AceConfigDialog-3.0:
+      url: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceConfig-3.0/AceConfigDialog-3.0
 ignore:
-   - SPFButtons.lua
+   - SocialPostFrame/SPFButtons.lua
+   - Libs
+ 

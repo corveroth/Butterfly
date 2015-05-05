@@ -1,10 +1,14 @@
 local addonName, Butterfly = ...;
 
+-- Don't wait for Social for kill shot stuff, it stands alone.
+Butterfly:InitializeKillShotElements()
+
 local Watcher = CreateFrame("Frame")
 Watcher:RegisterEvent("ADDON_LOADED")
 Watcher:SetScript("OnEvent", function(self, event, addon, ...)
 	if event == "ADDON_LOADED" and addon == "Blizzard_SocialUI" then
 		Butterfly:ApplyTextHooks()
+		
 		Butterfly:InitializeFauxFrame()
 		Butterfly:InitializeGalleryFrame()
 		-- TODO
@@ -13,3 +17,5 @@ Watcher:SetScript("OnEvent", function(self, event, addon, ...)
 		-- Butterfly:InitializeSPFButtons()
 	end
 end)
+
+_G["Butterfly"] = Butterfly

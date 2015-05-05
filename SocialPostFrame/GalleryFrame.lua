@@ -222,6 +222,7 @@ function GalleryFrame:AddGalleryButton()
 	C_Social.SetTextureToScreenshot(f.BG, f.id)
 	-- This line feels hackish but the texture doesn't return valid sizes until it's sized > 0 somewhere
 	f.BG.width, f.BG.height = width, height
+	f.BG:SetNonBlocking(true)
 	
 	hooksecurefunc(f.BG, "SetDesaturated", function() assert(false, "Desaturated texture!\nPlease forward this crash log to corveroth@gmail.com") end)
 	
@@ -295,24 +296,18 @@ end
 
 
 --[[============
-	C_Social.SetTextureToScreenshot is a fucking expensive function.
-	There's not much way around that, though. In order to prevent a total lockup when the Social UI opens,
-	at least stagger it on a timer. Each iteration will still cause stutter on lower-end hardware, but it's something.
-	
-	(Yes, STTS is the killer here. Don't try to get clever unless you can work around that)
+	C_Social.SetTextureToScreenshot is relatively expensive, but f.BG is non-blocking, which mitigates most of it.
+	Might be worth investigating further mitigation options now.
 --============]]
 function GalleryFrame:RebuildFromReload()
-	local ticker = C_Timer.NewTicker(0.2, function(self)
-		if #GalleryFrame.galleryButtons < C_Social.GetLastScreenshot() then
-			GalleryFrame:AddGalleryButton()
-			GalleryFrame:ResizeContents()
-			if not GalleryFrame:IsShown() then
-				GalleryFrame:Show()
-			end
-		else
-			self:Cancel()
-		end
-	end)
+	for i = 1,  C_Social.GetLastScreenshot() do
+		GalleryFrame:AddGalleryButton()
+	end
+	GalleryFrame:ResizeContents()
+	if not GalleryFrame:IsShown() then
+		GalleryFrame:Show()
+	end
+
 end
 
 function Butterfly:InitializeGalleryFrame()

@@ -1,0 +1,152 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+  <Frame name="CornerDragFrame" virtual="true">
+    <Size x="20" y="20"/>
+    <Scripts>
+	  <!-- Gotta redefine these scripts (or delay until SUI load) -->
+      <OnEnter function="ButterflyMover_Resize_OnEnter"/>
+      <OnLeave function="ButterflyMover_Resize_OnLeave"/>
+	  
+      <OnMouseDown function="ButterflyMover_Resize_OnMouseDown"/>
+      <OnMouseUp function="ButterflyMover_Resize_OnMouseUp"/>
+    </Scripts>
+  </Frame>
+
+  <Frame name="ButterflyMoverTemplate" toplevel="true" movable="true" hidden="true" virtual="true">
+    <Layers>
+      <Layer level="BORDER" textureSubLevel="1">
+        <Texture parentKey="BorderTopLeft" atlas="Crop-Corner" useAtlasSize="true">
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+          </Anchors>
+          <TexCoords left="0" right="1" top="0" bottom="1"/>
+        </Texture>
+        <Texture parentKey="BorderTopRight" atlas="Crop-Corner" useAtlasSize="true">
+          <Anchors>
+            <Anchor point="TOPRIGHT"/>
+          </Anchors>
+          <TexCoords left="1" right="0" top="0" bottom="1"/>
+        </Texture>
+        <Texture parentKey="BorderBottomRight" atlas="Crop-Corner" useAtlasSize="true">
+          <Anchors>
+            <Anchor point="BOTTOMRIGHT"/>
+          </Anchors>
+          <TexCoords left="1" right="0" top="1" bottom="0"/>
+        </Texture>
+        <Texture parentKey="BorderBottomLeft" atlas="Crop-Corner" useAtlasSize="true">
+          <Anchors>
+            <Anchor point="BOTTOMLEFT"/>
+          </Anchors>
+          <TexCoords left="0" right="1" top="1" bottom="0"/>
+        </Texture>
+       
+        <Texture parentKey="BorderLeftMiddle" atlas="Crop-Side" useAtlasSize="true">
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeKey="$parent.BorderTopLeft" relativePoint="BOTTOMLEFT"/>
+            <Anchor point="BOTTOMLEFT" relativeKey="$parent.BorderBottomLeft" relativePoint="TOPLEFT"/>
+          </Anchors>
+        </Texture>
+        <Texture parentKey="BorderRightMiddle" atlas="Crop-Side" useAtlasSize="true">
+          <Anchors>
+            <Anchor point="TOP" relativeKey="$parent.BorderTopRight" relativePoint="BOTTOM"/>
+            <Anchor point="BOTTOM" relativeKey="$parent.BorderBottomRight" relativePoint="TOP"/>
+          </Anchors>
+          <TexCoords left="1" right="0" top="0" bottom="1"/>
+        </Texture>
+        <Texture parentKey="BorderTopMiddle" atlas="Crop-Top" useAtlasSize="true">
+          <Anchors>              
+            <Anchor point="RIGHT" relativeKey="$parent.BorderTopRight" relativePoint="LEFT"/>
+            <Anchor point="LEFT" relativeKey="$parent.BorderTopLeft" relativePoint="RIGHT"/>
+          </Anchors>
+        </Texture>
+        <Texture parentKey="BorderBottomMiddle" atlas="Crop-Top" useAtlasSize="true">
+          <Anchors>              
+            <Anchor point="RIGHT" relativeKey="$parent.BorderBottomRight" relativePoint="LEFT"/>
+            <Anchor point="LEFT" relativeKey="$parent.BorderBottomLeft" relativePoint="RIGHT"/>
+          </Anchors>
+          <TexCoords left="0" right="1" top="1" bottom="0"/>
+        </Texture>
+      </Layer>
+	  <Layer level="BACKGROUND">
+		<Texture parentKey="BG">
+          <Anchors>
+            <Anchor point="TOPLEFT" x="0" y="0"/>
+            <Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+          </Anchors>
+        </Texture>
+	  </Layer>
+    </Layers>
+    <Frames>
+      <Frame parentKey="TopLeftDragFrame" inherits="CornerDragFrame">
+        <Anchors>
+          <Anchor point="TOPLEFT"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="corner" value="TOPLEFT" type="string"/>
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="BottomLeftDragFrame" inherits="CornerDragFrame">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="corner" value="BOTTOMLEFT" type="string"/>
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="TopRightDragFrame" inherits="CornerDragFrame">
+        <Anchors>
+          <Anchor point="TOPRIGHT"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="corner" value="TOPRIGHT" type="string"/>
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="BottomRightDragFrame" inherits="CornerDragFrame">
+        <Anchors>
+          <Anchor point="BOTTOMRIGHT"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="corner" value="BOTTOMRIGHT" type="string"/>
+        </KeyValues>
+      </Frame>
+	  <Frame parentKey="TopDragFrame" inherits="CornerDragFrame">
+        <Anchors>
+          <Anchor point="TOP"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="corner" value="TOP" type="string"/>
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="BottomDragFrame" inherits="CornerDragFrame">
+        <Anchors>
+          <Anchor point="BOTTOM"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="corner" value="BOTTOM" type="string"/>
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="RightDragFrame" inherits="CornerDragFrame">
+        <Anchors>
+          <Anchor point="RIGHT"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="corner" value="RIGHT" type="string"/>
+        </KeyValues>
+      </Frame>
+      <Frame parentKey="LeftDragFrame" inherits="CornerDragFrame">
+        <Anchors>
+          <Anchor point="LEFT"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="corner" value="LEFT" type="string"/>
+        </KeyValues>
+      </Frame>
+    </Frames>
+    <Scripts>
+      <OnEnter function="ButterflyMover_Move_OnEnter"/>
+      <OnLeave function="ButterflyMover_Move_OnLeave"/>
+      <OnMouseDown function="ButterflyMover_Move_OnMouseDown"/>
+      <OnMouseUp function="ButterflyMover_Move_OnMouseUp"/>
+    </Scripts>
+  </Frame>
+</Ui>

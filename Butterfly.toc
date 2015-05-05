@@ -2,10 +2,29 @@
 ## Title: Butterfly
 ## Author: Corv
 ## Notes: Adds features to the Social (Twitter) interface.
+## SavedVariables: KillShotSV
 
-FauxFrame.lua
-EditBox.lua
-GalleryFrame.lua
+Libs/AceGUI-3.0-SharedMediaWidgets/Libs/Libstub/Libstub.lua
+Libs/AceGUI-3.0-SharedMediaWidgets/Libs/CallbackHandler-1.0/CallbackHandler-1.0.xml
+Libs/AceGUI-3.0-SharedMediaWidgets/Libs/AceGUI-3.0/AceGUI-3.0.xml
+
+Libs/AceGUI-3.0-SharedMediaWidgets/widget.xml
+
+Libs/AceConfigDialog-3.0/AceConfigDialog-3.0.xml
+
+Libs/LibSharedMedia-3.0/lib.xml
+
+Libs/SharedMediaAdditionalFonts/Core.lua
+Libs/SharedMediaAdditionalFonts/SharedMediaAdditionalFonts.lua
+Libs/SharedMediaAdditionalFonts/MyAdditionalFonts.lua
+
+
+SocialPostFrame/FauxFrame.lua
+SocialPostFrame/EditBox.lua
+SocialPostFrame/GalleryFrame.lua
+# SocialPostFrame/SPFButtons.lua
+KillShotMode/Mover.xml
+KillShotMode/Mover.lua
+KillShotMode/KillShotMode.lua
+
 Butterfly.lua
-# SPFButtons.lua
-
