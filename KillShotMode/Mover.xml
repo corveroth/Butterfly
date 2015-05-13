@@ -109,7 +109,7 @@
           <KeyValue key="corner" value="BOTTOMRIGHT" type="string"/>
         </KeyValues>
       </Frame>
-	  <Frame parentKey="TopDragFrame" inherits="CornerDragFrame">
+	  <!-- <Frame parentKey="TopDragFrame" inherits="CornerDragFrame">
         <Anchors>
           <Anchor point="TOP"/>
         </Anchors>
@@ -140,7 +140,7 @@
         <KeyValues>
           <KeyValue key="corner" value="LEFT" type="string"/>
         </KeyValues>
-      </Frame>
+      </Frame> -->
     </Frames>
     <Scripts>
       <OnEnter function="ButterflyMover_Move_OnEnter"/>

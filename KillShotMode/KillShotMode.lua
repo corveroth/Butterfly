@@ -20,6 +20,12 @@ local addonName, Butterfly = ...;
 	recently cleared encounter prior to that screenshot.
 --============]]
 
+-- why you do this blizz
+local UI_FONTSIZE_MAX = 36
+local function GetScaledMaxFontSize()
+	return UI_FONTSIZE_MAX*UIParent:GetScale()
+end
+
 -- SavedVariables
 KillShotSV = {}
 
@@ -54,43 +60,113 @@ local DIFFICULTY_TEXT = {
 local KillShotElements = CreateFrame("Frame", "ButterflyKillShotElements", WorldFrame)
 KillShotElements:SetAllPoints()
 KillShotElements:Hide()
+KillShotElements.elements = {}
 Butterfly.KillShotElements = KillShotElements
 do
+	-- Finds the largest font size that keeps a string smaller than the widget's size
+	local function ResizeFontString(widget, targetWidth, targetHeight)
+		local widgetWidth = widget:GetStringWidth()
+		assert(widgetWidth and widgetWidth ~= 0)
+		assert(targetWidth and targetWidth ~= 0)
+		local filename, fontHeight, flags = widget:GetFont()
+		
+		-- If we can, prefer to scale based on the point size
+		if fontHeight+1 < GetScaledMaxFontSize() then
+			if widgetWidth < targetWidth then
+				while widgetWidth < targetWidth do
+					fontHeight = fontHeight + 1
+					widget:SetFont(filename, fontHeight, flags)
+					widgetWidth = widget:GetStringWidth()
+					
+				end
+				-- Overshot the size, shrink it back down by one
+				widget:SetFont(filename, fontHeight - 1, flags)
+			else
+				while widgetWidth > targetWidth do
+					fontHeight = fontHeight - 1
+					widget:SetFont(filename, fontHeight, flags)
+					widgetWidth = widget:GetStringWidth()
+				end
+			end
+		else
+		-- However, if we need to scale beyond 36pt, use SetTextHeight.
+		-- Sucks , but that's what Blizz forces us to do.
+			if widgetWidth < targetWidth then
+				while widgetWidth < targetWidth do
+					fontHeight = fontHeight + 1
+					widget:SetTextHeight(fontHeight)
+					widgetWidth = widget:GetStringWidth()
+				end
+				-- Overshot the size, shrink it back down by one
+				widget:SetFont(filename, fontHeight - 1, flags)
+			else
+				while widgetWidth > targetWidth do
+					fontHeight = fontHeight - 1
+					widget:SetTextHeight(fontHeight)
+					widgetWidth = widget:GetStringWidth()
+				end
+			end
+		end
+	end
+	
+	
 	local BossDownText = KillShotElements:CreateFontString()
 	BossDownText:SetFontObject("GameFontNormal")
 	BossDownText:SetPoint("CENTER", 0, 200)
-	KillShotElements.BossDownText = BossDownText
-	function KillShotElements:UpdateBossDownText(bossDownString)
-		self.BossDownText:SetText(bossDownString)
+	function BossDownText:Update(bossDownString)
+		self:SetText(bossDownString)
 	end
-	Butterfly.Mover:New(BossDownText)
+	function BossDownText:Resize(newWidth, newHeight)
+		ResizeFontString(self, newWidth)
+	end
+	table.insert(KillShotElements.elements, BossDownText)
+	KillShotElements.BossDownText = BossDownText
+	
 	
 	local GuildNameText = KillShotElements:CreateFontString()
 	GuildNameText:SetFontObject("GameFontNormal")
 	GuildNameText:SetPoint("CENTER", 0, -200)
-	KillShotElements.GuildNameText = GuildNameText
-	function KillShotElements:UpdateGuildNameText(guildNameText)
-		self.GuildNameText:SetText(guildNameText)
+	function GuildNameText:Update(guildNameText)
+		self:SetText(guildNameText)
 	end
+	function GuildNameText:Resize(newWidth, newHeight)
+		ResizeFontString(self, newWidth)
+	end
+	table.insert(KillShotElements.elements, GuildNameText)
+	KillShotElements.GuildNameText = GuildNameText
 	
 	
 	local DateText = KillShotElements:CreateFontString()
 	DateText:SetFontObject("GameFontNormal")
 	DateText:SetPoint("CENTER", 0, -250)
-	KillShotElements.DateText = DateText
-	function KillShotElements:UpdateDateText(dateString)
-		self.DateText:SetText(dateString)
+	function DateText:Update(dateString)
+		self:SetText(dateString)
 	end
+	function DateText:Resize(newWidth, newHeight)
+		ResizeFontString(self, newWidth)
+	end
+	table.insert(KillShotElements.elements, DateText)
+	KillShotElements.DateText = DateText
 	
 	
 	-- 48638, just in case
 	local GuildCrest = CreateFrame("Frame", KillShotElements)
-	KillShotElements.GuildCrest = KillShotElements.GuildCrest
-	function KillShotElements:UpdateGuildCrest()
+	function GuildCrest:Update()
 		-- TabardModel:GetUpperEmblemTexture(TabardFrameEmblemTopLeft);
 		-- TabardModel:GetUpperEmblemTexture(TabardFrameEmblemTopRight);
 		-- TabardModel:GetLowerEmblemTexture(TabardFrameEmblemBottomLeft);
 		-- TabardModel:GetLowerEmblemTexture(TabardFrameEmblemBottomRight);
+	end
+	function GuildCrest:Resize(newWidth, newHeight)
+		self:SetSize(newWidth, newHeight)
+	end
+end
+
+function KillShotElements:CreateMovers()
+	for _, element in pairs(self.elements) do
+		if not element.mover then
+			Butterfly.Mover:NewMover(element, KillShotElements)
+		end
 	end
 end
 
@@ -206,9 +282,9 @@ function KillShotElements:SetToEventIndex(index)
 	local eventData = self.eventLog[index]
 	assert(eventData.type == "kill", "Attempt to set KillShotElements to non-kill data.")
 	
-	self:UpdateBossDownText(self:GetKillMessage(index))
-	self:UpdateDateText(eventData.date)
-	self:UpdateGuildNameText(eventData.guildName)
+	self.BossDownText:Update(self:GetKillMessage(index))
+	self.DateText:Update(eventData.date)
+	self.GuildNameText:Update(eventData.guildName)
 end
 
 function KillShotElements:GetKillMessage(eventIndex)
@@ -230,6 +306,7 @@ end
 
 function Butterfly:EnterKillShotMode()
 	KillShotElements:SetScale(UIParent:GetScale())
+	KillShotElements:CreateMovers()
 	KillShotElements:Show()
 	
 	CloseMenus()
@@ -274,8 +351,8 @@ function Butterfly:InitializeKillShotElements()
 		elseif event == "ADDON_LOADED" then
 			self:RestoreEventLog()
 		else
-			-- self:UpdateGuildNameText()
-			-- self:UpdateGuildCrest()
+			-- self.GuildNameText:Update()
+			-- self.GuildCrest:Update()
 		end
 	end)
 end
